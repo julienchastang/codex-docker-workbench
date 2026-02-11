@@ -1,0 +1,32 @@
+services:
+  codex:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: codex-rocky:9
+    container_name: "codex-${REPO}"
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
+    environment:
+      - PAGER=less
+    volumes:
+      # ---- repos we will analyze ----
+      - "/home/rocky/codex-repos/${REPO}:/workspace"
+
+      # ---- shared, keep across repos ----
+      - "/home/rocky/codex-state/shared/config.toml:/home/codex/.codex/config.toml"
+      - "/home/rocky/codex-state/shared/auth.json:/home/codex/.codex/auth.json"
+      - "/home/rocky/codex-state/shared/skills:/home/codex/.codex/skills"
+      - "/home/rocky/codex-state/shared/models_cache.json:/home/codex/.codex/models_cache.json"
+      - "/home/rocky/codex-state/shared/version.json:/home/codex/.codex/version.json"
+
+      # ---- repo-scoped state ----
+      - "/home/rocky/codex-state/repos/${REPO}/sessions:/home/codex/.codex/sessions"
+      - "/home/rocky/codex-state/repos/${REPO}/history.jsonl:/home/codex/.codex/history.jsonl"
+      - "/home/rocky/codex-state/repos/${REPO}/log:/home/codex/.codex/log"
+      - "/home/rocky/codex-state/repos/${REPO}/tmp:/home/codex/.codex/tmp"
+      - "/home/rocky/codex-state/shared/.ssh:/home/codex/.ssh:ro"
+      - "/home/rocky/codex-state/shared/.gitconfig:/home/codex/.gitconfig:ro"
+
+    user: "${UID:-1000}:${GID:-1000}"

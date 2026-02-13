@@ -36,7 +36,7 @@ set +a
 : "${REPO:?ERROR: REPO is not set in .env}"
 
 REPO_DIR="${CODEX_HOST_DIR}/codex-state/repos/${REPO}"
-SHARED_DIR="${CODEX_HOST_DIR}/codex-state/repos/shared"
+SHARED_DIR="${CODEX_HOST_DIR}/codex-state/shared"
 ARCHIVE_ROOT="${CODEX_HOST_DIR}/codex-state/repos-archives"
 
 if [[ "${FRESH}" -eq 1 && -d "${REPO_DIR}" ]]; then

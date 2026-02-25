@@ -13,6 +13,7 @@ services:
     volumes:
       # ---- repos we will analyze ----
       - "${CODEX_HOST_DIR}/codex-repos/${REPO}:/workspace"
+      - "${CODEX_HOST_DIR}/codex-state/shared/AGENTS.md:/workspace/AGENTS.md"
 
       # ---- shared, keep across repos ----
       - "${CODEX_HOST_DIR}/codex-state/shared/config.toml:/home/codex/.codex/config.toml"

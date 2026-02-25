@@ -56,6 +56,7 @@ mkdir -p \
 touch \
   "${REPO_DIR}/history.jsonl" \
   "${SHARED_DIR}/auth.json" \
+  "${SHARED_DIR}/AGENTS.md" \
   "${SHARED_DIR}/config.toml" \
   "${SHARED_DIR}/models_cache.json" \
   "${SHARED_DIR}/version.json"

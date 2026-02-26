@@ -62,5 +62,6 @@ touch \
   "${SHARED_DIR}/version.json"
 
 if [[ "${NO_RUN}" -eq 0 ]]; then
-  docker compose run --rm codex
+  CONTAINER_NAME="codex-${REPO//[^a-zA-Z0-9_.-]/-}"
+  docker compose run --rm --name "${CONTAINER_NAME}" codex
 fi

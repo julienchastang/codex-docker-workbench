@@ -20,6 +20,8 @@ RUN dnf -y update && \
       findutils \
       tar \
       gzip \
+      python3 \
+      python3-pip \
       shadow-utils \
       dnf-plugins-core && \
     dnf -y clean all && rm -rf /var/cache/dnf
@@ -71,6 +73,17 @@ RUN set -eux; \
 	gosu nobody true
 
 RUN npm i -g @openai/codex && npm cache clean --force
+
+RUN python3 -m pip install --no-cache-dir \
+      pytest \
+      fastapi \
+      uvicorn \
+      httpx \
+      pytest-cov \
+      ruff \
+      mypy
+
+RUN ln -sf /usr/bin/python3 /usr/local/bin/python
 
 COPY runcodex.sh $HOME/bin/
 RUN chmod +x $HOME/bin/runcodex.sh

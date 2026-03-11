@@ -38,6 +38,9 @@ RUN dnf -y install \
       jq \
       patch \
       diffutils \
+      zip \
+      unzip \
+      vim-common \
       emacs-nox && \
     dnf -y clean all && rm -rf /var/cache/dnf
 

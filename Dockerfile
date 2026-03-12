@@ -78,6 +78,7 @@ RUN set -eux; \
 RUN npm i -g @openai/codex && npm cache clean --force
 
 RUN python3 -m pip install --no-cache-dir \
+      basedpyright \
       pytest \
       fastapi \
       uvicorn \

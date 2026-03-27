@@ -20,6 +20,7 @@ RUN dnf -y update && \
       findutils \
       tar \
       gzip \
+      bubblewrap \
       python3 \
       python3-pip \
       shadow-utils \

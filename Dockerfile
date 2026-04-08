@@ -21,6 +21,7 @@ RUN dnf -y update && \
       tar \
       gzip \
       bubblewrap \
+      ruby \
       python3 \
       python3-pip \
       shadow-utils \

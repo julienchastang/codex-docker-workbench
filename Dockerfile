@@ -21,11 +21,16 @@ RUN dnf -y update && \
       tar \
       gzip \
       bubblewrap \
-      ruby \
       python3 \
       python3-pip \
       shadow-utils \
       dnf-plugins-core && \
+    dnf -y clean all && rm -rf /var/cache/dnf
+
+RUN dnf -y module reset ruby && \
+    dnf -y module enable ruby:3.3 && \
+    dnf -y install ruby ruby-devel && \
+    gem install --no-document bundler && \
     dnf -y clean all && rm -rf /var/cache/dnf
 
 RUN dnf -y config-manager --set-enabled crb && \
@@ -78,8 +83,6 @@ RUN set -eux; \
 	gosu nobody true
 
 RUN npm i -g @openai/codex && npm cache clean --force
-
-RUN gem install --no-document bundler
 
 RUN python3 -m pip install --no-cache-dir \
       basedpyright \

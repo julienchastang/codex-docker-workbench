@@ -79,6 +79,8 @@ RUN set -eux; \
 
 RUN npm i -g @openai/codex && npm cache clean --force
 
+RUN gem install --no-document bundler
+
 RUN python3 -m pip install --no-cache-dir \
       basedpyright \
       pytest \

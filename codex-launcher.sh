@@ -47,18 +47,22 @@ if [[ "${FRESH}" -eq 1 && -d "${REPO_DIR}" ]]; then
   echo "Archived: ${REPO_DIR} -> ${archive_dir}" >&2
 fi
 
+CODEX_SHARED_DIR="${SHARED_DIR}/codex"
+
 mkdir -p \
   "${REPO_DIR}/tmp" \
   "${REPO_DIR}/log" \
   "${REPO_DIR}/sessions" \
-  "${SHARED_DIR}/skills"
+  "${CODEX_SHARED_DIR}"
 
 touch \
-  "${REPO_DIR}/history.jsonl" \
-  "${SHARED_DIR}/auth.json" \
-  "${SHARED_DIR}/config.toml" \
-  "${SHARED_DIR}/models_cache.json" \
-  "${SHARED_DIR}/version.json"
+  "${CODEX_SHARED_DIR}/auth.json" \
+  "${CODEX_SHARED_DIR}/config.toml" \
+  "${CODEX_SHARED_DIR}/history.jsonl" \
+  "${CODEX_SHARED_DIR}/models_cache.json" \
+  "${CODEX_SHARED_DIR}/version.json"
+
+mkdir -p "${CODEX_SHARED_DIR}/skills"
 
 if [[ "${NO_RUN}" -eq 0 ]]; then
   CONTAINER_NAME="codex-${REPO//[^a-zA-Z0-9_.-]/-}"

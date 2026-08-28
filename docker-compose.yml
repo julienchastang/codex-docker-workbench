@@ -16,16 +16,11 @@ services:
       - "${CODEX_HOST_DIR}/codex-state/shared/AGENTS.md:/workspace/AGENTS.md"
 
       # ---- shared, keep across repos ----
-      - "${CODEX_HOST_DIR}/codex-state/shared/config.toml:/home/codex/.codex/config.toml"
-      - "${CODEX_HOST_DIR}/codex-state/shared/auth.json:/home/codex/.codex/auth.json"
-      - "${CODEX_HOST_DIR}/codex-state/shared/skills:/home/codex/.codex/skills"
-      - "${CODEX_HOST_DIR}/codex-state/shared/models_cache.json:/home/codex/.codex/models_cache.json"
-      - "${CODEX_HOST_DIR}/codex-state/shared/version.json:/home/codex/.codex/version.json"
+      - "${CODEX_HOST_DIR}/codex-state/shared/codex:/home/codex/.codex"
       - "${CODEX_HOST_DIR}/codex-state/shared/.ssh:/home/codex/.ssh:ro"
       - "${CODEX_HOST_DIR}/codex-state/shared/.gitconfig:/home/codex/.gitconfig:ro"
 
       # ---- repo-scoped state ----
       - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/sessions:/home/codex/.codex/sessions"
-      - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/history.jsonl:/home/codex/.codex/history.jsonl"
       - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/log:/home/codex/.codex/log"
       - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/tmp:/home/codex/.codex/tmp"

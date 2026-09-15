@@ -11,6 +11,16 @@ RUN dnf -y update && \
     dnf -y install \
       ca-certificates \
       curl-minimal \
+      nmap \
+      nmap-ncat \
+      iproute \
+      iputils \
+      openssl \
+      tcpdump \
+      bind-utils \
+      grep \
+      sed \
+      gawk \
       wget \
       git \
       less \

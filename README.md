@@ -16,6 +16,17 @@ Launch the container:
 ./codex-launcher.sh
 ```
 
+Networking defaults to Docker's bridge network. For direct access to the
+Lubuntu host's Ethernet interfaces during modem diagnostics, set this in `.env`:
+
+```sh
+CODEX_NETWORK_MODE=host
+```
+
+Remove the setting or set it to `bridge` for normal use. Relaunch the container
+after changing it; no image rebuild is needed. Host mode shares the Linux host's
+network interfaces and routes, but does not grant additional diagnostic privileges.
+
 Writable Codex state is stored under:
 
 ```text

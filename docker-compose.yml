@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
     image: codex-rocky:9
+    # Set CODEX_NETWORK_MODE=host for direct access to Linux host interfaces.
+    network_mode: "${CODEX_NETWORK_MODE:-bridge}"
     container_name: "codex-${REPO}"
     stdin_open: true
     tty: true

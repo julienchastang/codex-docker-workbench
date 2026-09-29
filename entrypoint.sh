@@ -1,29 +1,34 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-if [ "$1" = 'runcodex.sh' ]; then
+if [[ "${1:-}" == "runcodex.sh" ]]; then
+    USERNAME="${CODEX_USERNAME:-codex}"
+    USER_ID="${CODEX_USER_ID:-1000}"
+    GROUP_ID="${CODEX_GROUP_ID:-1000}"
 
-    USERNAME=${CODEX_USERNAME:-codex}
-    USER_ID=${CODEX_USER_ID:-1000}
-    GROUP_ID=${CODEX_GROUP_ID:-1000}
+    if ! getent group "${GROUP_ID}" >/dev/null; then
+        groupadd --gid "${GROUP_ID}" "${USERNAME}"
+    fi
 
-    ###
-    # CODEX user
-    ###
-    groupadd -r ${USERNAME} -g ${GROUP_ID} && \
-    useradd -u ${USER_ID} -g ${USERNAME} -Ms /bin/bash -c "CODEX user" ${USERNAME}
+    if ! getent passwd "${USER_ID}" >/dev/null; then
+        useradd \
+            --uid "${USER_ID}" \
+            --gid "${GROUP_ID}" \
+            --home-dir "${HOME}" \
+            --shell /bin/bash \
+            --no-create-home \
+            "${USERNAME}"
+    fi
 
-  # chown (almost) everything in ${HOME}, but skip read-only bits like ~/.ssh and ~/.gitconfig
-    find "${HOME}" -mindepth 1 -maxdepth 1 \
-        ! -name ".ssh" \
-        ! -name ".gitconfig" \
-        -exec chown -R "${USERNAME}:${USERNAME}" {} +
+    gosu "${USER_ID}:${GROUP_ID}" \
+        ln -sfn /home/codex/.codex-shared/auth.json \
+        /home/codex/.codex/auth.json
 
-    chown -R "${USERNAME}:${USERNAME}" /workspace
+    gosu "${USER_ID}:${GROUP_ID}" \
+        ln -sfn /home/codex/.codex-shared/config.toml \
+        /home/codex/.codex/config.toml
 
-    sync
-
-    exec gosu ${USERNAME} "$@"
+    exec gosu "${USER_ID}:${GROUP_ID}" "$@"
 fi
 
 exec "$@"

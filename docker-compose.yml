@@ -4,25 +4,26 @@ services:
       context: .
       dockerfile: Dockerfile
     image: codex-rocky:9
-    # Set CODEX_NETWORK_MODE=host for direct access to Linux host interfaces.
-    network_mode: "${CODEX_NETWORK_MODE:-bridge}"
-    container_name: "codex-${REPO}"
+
     stdin_open: true
     tty: true
     working_dir: /workspace
+
     environment:
       - PAGER=less
-    volumes:
-      # ---- repos we will analyze ----
-      - "${CODEX_HOST_DIR}/codex-repos/${REPO}:/workspace"
-      - "${CODEX_HOST_DIR}/codex-state/shared/AGENTS.md:/workspace/AGENTS.md"
+      - CODEX_USER_ID=${CODEX_USER_ID:-1000}
+      - CODEX_GROUP_ID=${CODEX_GROUP_ID:-1000}
 
-      # ---- shared, keep across repos ----
-      - "${CODEX_HOST_DIR}/codex-state/shared/codex:/home/codex/.codex"
+    volumes:
+      # Repository being worked on.
+      - "${CODEX_HOST_DIR}/codex-repos/${REPO}:/workspace"
+
+      # All Codex runtime/session state is repository-specific.
+      - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/codex:/home/codex/.codex"
+
+      # Shared Codex identity and configuration.
+      - "${CODEX_HOST_DIR}/codex-state/shared:/home/codex/.codex-shared"
+
+      # Shared Git/SSH identity.
       - "${CODEX_HOST_DIR}/codex-state/shared/.ssh:/home/codex/.ssh:ro"
       - "${CODEX_HOST_DIR}/codex-state/shared/.gitconfig:/home/codex/.gitconfig:ro"
-
-      # ---- repo-scoped state ----
-      - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/sessions:/home/codex/.codex/sessions"
-      - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/log:/home/codex/.codex/log"
-      - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/tmp:/home/codex/.codex/tmp"

@@ -9,6 +9,14 @@ services:
     tty: true
     working_dir: /workspace
 
+    # Codex uses Bubblewrap for its workspace sandbox. Docker's default seccomp
+    # profile blocks the unprivileged user/mount namespace operations Bubblewrap
+    # requires, causing sandboxed commands to fail and fall back to approval prompts.
+    # This disables Docker's syscall filtering but retains the other container
+    # isolation mechanisms while allowing Codex's own sandbox to function.
+    security_opt:
+      - seccomp=unconfined
+
     environment:
       - PAGER=less
       - CODEX_USER_ID=${CODEX_USER_ID:-1000}

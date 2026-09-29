@@ -8,6 +8,7 @@ services:
     stdin_open: true
     tty: true
     working_dir: /workspace
+    network_mode: ${CODEX_NETWORK_MODE:-bridge}
 
     # Codex uses Bubblewrap for its workspace sandbox. Docker's default seccomp
     # profile blocks the unprivileged user/mount namespace operations Bubblewrap

@@ -33,6 +33,10 @@ Then launch the workbench:
 ```
 
 The repository is mounted at `/workspace`. Run `codex` from the container shell.
+The workbench's shared `AGENTS.md` is mounted read-only at
+`/workspace/AGENTS.md` for every repository selected with `REPO`; it is not part
+of the repository itself. The launcher exits with an error if the source file is
+missing.
 
 ## Options
 

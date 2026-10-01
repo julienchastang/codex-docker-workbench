@@ -27,6 +27,15 @@ services:
       # Repository being worked on.
       - "${CODEX_HOST_DIR}/codex-repos/${REPO}:/workspace"
 
+      # Workbench instructions shared by every repository. Disabling automatic
+      # host-path creation avoids a root-owned path if the source is missing.
+      - type: bind
+        source: ./AGENTS.md
+        target: /workspace/AGENTS.md
+        read_only: true
+        bind:
+          create_host_path: false
+
       # All Codex runtime/session state is repository-specific.
       - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/codex:/home/codex/.codex"
 

@@ -30,6 +30,11 @@ ENV_FILE="${SCRIPT_DIR}/.env"
   exit 1
 }
 
+[[ -f "${SCRIPT_DIR}/AGENTS.md" ]] || {
+  echo "ERROR: AGENTS.md file not found at ${SCRIPT_DIR}/AGENTS.md" >&2
+  exit 1
+}
+
 set -a
 source "${ENV_FILE}"
 set +a

@@ -4,6 +4,7 @@ WORKDIR /workspace
 
 ENV GOSU_VERSION=1.19
 ENV GOSU_URL=https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu
+ARG EMACS_VERSION=31.1
 ENV HOME=/home/codex
 ENV PATH=$HOME/bin:$PATH
 
@@ -57,8 +58,26 @@ RUN dnf -y install \
       diffutils \
       zip \
       unzip \
-      vim-common \
-      emacs-nox && \
+      vim-common && \
+    dnf -y clean all && rm -rf /var/cache/dnf
+
+RUN dnf -y install \
+      gcc \
+      make \
+      ncurses-devel \
+      gnutls-devel \
+      libxml2-devel \
+      jansson-devel \
+      xz && \
+    curl -fsSLO "https://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz" && \
+    tar -xf "emacs-${EMACS_VERSION}.tar.xz" && \
+    cd "emacs-${EMACS_VERSION}" && \
+    ./configure --without-x --without-native-compilation && \
+    make -j"$(nproc)" && \
+    make install && \
+    cd .. && \
+    rm -rf "emacs-${EMACS_VERSION}" "emacs-${EMACS_VERSION}.tar.xz" && \
+    dnf -y remove gcc make ncurses-devel gnutls-devel libxml2-devel jansson-devel xz && \
     dnf -y clean all && rm -rf /var/cache/dnf
 
 RUN curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \

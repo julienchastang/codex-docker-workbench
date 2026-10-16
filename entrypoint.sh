@@ -20,6 +20,8 @@ if [[ "${1:-}" == "runcodex.sh" ]]; then
             "${USERNAME}"
     fi
 
+    chown "${USER_ID}:${GROUP_ID}" /home/codex
+
     gosu "${USER_ID}:${GROUP_ID}" \
         ln -sfn /home/codex/.codex-shared/auth.json \
         /home/codex/.codex/auth.json

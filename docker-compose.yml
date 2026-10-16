@@ -45,3 +45,6 @@ services:
       # Shared Git/SSH identity.
       - "${CODEX_HOST_DIR}/codex-state/shared/.ssh:/home/codex/.ssh:ro"
       - "${CODEX_HOST_DIR}/codex-state/shared/.gitconfig:/home/codex/.gitconfig:ro"
+
+      # Writable Emacs configuration and state.
+      - "${CODEX_HOST_DIR}/codex-state/shared/emacs.d:/home/codex/.emacs.d"

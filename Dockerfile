@@ -135,7 +135,8 @@ PS1='\[\e[1;36m\]\u\[\e[0m\]@\[\e[1;34m\]\h\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\]\n\[
 EOF
 
 COPY runcodex.sh $HOME/bin/
-RUN chmod +x $HOME/bin/runcodex.sh
+RUN chmod +x $HOME/bin/runcodex.sh && \
+    mkdir -p $HOME/.emacs.d
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh

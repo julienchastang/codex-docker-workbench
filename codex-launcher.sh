@@ -74,7 +74,8 @@ fi
 
 mkdir -p \
   "${CODEX_STATE_DIR}" \
-  "${SHARED_CODEX_DIR}"
+  "${SHARED_CODEX_DIR}" \
+  "${SHARED_DIR}/emacs.d"
 
 touch \
   "${SHARED_CODEX_DIR}/auth.json" \

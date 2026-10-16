@@ -24,10 +24,16 @@ $CODEX_HOST_DIR/
 └── codex-state/shared/
     ├── .gitconfig
     ├── .ssh/
+    ├── emacs.d/
     └── codex/
         ├── auth.json
         └── config.toml
 ```
+
+The launcher creates and mounts `$CODEX_HOST_DIR/codex-state/shared/emacs.d/`.
+Place an existing Emacs configuration there before launching the workbench. The
+directory must be writable by UID/GID 1000 (or the IDs set with
+`CODEX_USER_ID` and `CODEX_GROUP_ID`).
 
 Then launch the workbench:
 
@@ -40,6 +46,26 @@ The workbench's shared `AGENTS.md` is mounted read-only at
 `/workspace/AGENTS.md` for every repository selected with `REPO`; it is not part
 of the repository itself. The launcher exits with an error if the source file is
 missing.
+
+Emacs is available in the container without a graphical interface. From the
+container shell, open the mounted configuration interactively or test it in
+batch mode:
+
+```sh
+emacs -nw
+emacs --batch --load ~/.emacs.d/init.el \
+  --eval '(message "Emacs configuration loaded")'
+```
+
+The batch command verifies that the configuration loads in the container's
+Linux environment, but it does not fully reproduce an interactive session.
+Platform-specific configuration, such as macOS-only settings, may require
+guards to load successfully in the container.
+
+Files created under `/home/codex/.emacs.d` persist in
+`$CODEX_HOST_DIR/codex-state/shared/emacs.d/` on the host. Emacs may also write
+cache and state files elsewhere under the writable `/home/codex` home directory;
+those files are container-local unless separately mounted.
 
 ## Options
 

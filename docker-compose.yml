@@ -40,7 +40,7 @@ services:
       - "${CODEX_HOST_DIR}/codex-state/repos/${REPO}/codex:/home/codex/.codex"
 
       # Shared Codex identity and configuration.
-      - "${CODEX_HOST_DIR}/codex-state/shared:/home/codex/.codex-shared"
+      - "${CODEX_HOST_DIR}/codex-state/shared/codex:/home/codex/.codex-shared"
 
       # Shared Git/SSH identity.
       - "${CODEX_HOST_DIR}/codex-state/shared/.ssh:/home/codex/.ssh:ro"

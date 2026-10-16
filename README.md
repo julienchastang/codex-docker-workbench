@@ -23,7 +23,10 @@ $CODEX_HOST_DIR/
 ├── codex-repos/$REPO/
 └── codex-state/shared/
     ├── .gitconfig
-    └── .ssh/
+    ├── .ssh/
+    └── codex/
+        ├── auth.json
+        └── config.toml
 ```
 
 Then launch the workbench:
@@ -45,4 +48,12 @@ missing.
 ./codex-launcher.sh --no-run  # prepare state without starting the container
 ```
 
-Authentication and configuration are shared across repositories. Other Codex state is stored per repository under `$CODEX_HOST_DIR/codex-state/repos/$REPO/`.
+Authentication and configuration are shared across repositories in
+`$CODEX_HOST_DIR/codex-state/shared/codex/`. The directory is writable so Codex
+can replace either file atomically. SSH credentials and `.gitconfig` are mounted
+separately and read-only. Other Codex state is stored per repository under
+`$CODEX_HOST_DIR/codex-state/repos/$REPO/`.
+
+When upgrading an existing setup, move `auth.json` and `config.toml` from
+`codex-state/shared/` into `codex-state/shared/codex/` before launching the
+workbench.

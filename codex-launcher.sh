@@ -46,6 +46,7 @@ REPO_DIR="${CODEX_HOST_DIR}/codex-repos/${REPO}"
 REPO_STATE_DIR="${CODEX_HOST_DIR}/codex-state/repos/${REPO}"
 CODEX_STATE_DIR="${REPO_STATE_DIR}/codex"
 SHARED_DIR="${CODEX_HOST_DIR}/codex-state/shared"
+SHARED_CODEX_DIR="${SHARED_DIR}/codex"
 ARCHIVE_ROOT="${CODEX_HOST_DIR}/codex-state/repos-archives"
 
 [[ -d "${REPO_DIR}" ]] || {
@@ -72,11 +73,12 @@ if [[ "${FRESH}" -eq 1 && -d "${REPO_STATE_DIR}" ]]; then
 fi
 
 mkdir -p \
-  "${CODEX_STATE_DIR}"
+  "${CODEX_STATE_DIR}" \
+  "${SHARED_CODEX_DIR}"
 
 touch \
-  "${SHARED_DIR}/auth.json" \
-  "${SHARED_DIR}/config.toml"
+  "${SHARED_CODEX_DIR}/auth.json" \
+  "${SHARED_CODEX_DIR}/config.toml"
 
 if [[ "${NO_RUN}" -eq 0 ]]; then
   CONTAINER_NAME="codex-${REPO//[^a-zA-Z0-9_.-]/-}"

@@ -131,7 +131,11 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # Show active user clearly with a modern, readable prompt.
-PS1='\[\e[1;36m\]\u\[\e[0m\]@\[\e[1;34m\]\h\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\]\n\[\e[1;32m\]\$\[\e[0m\] '
+if (( EUID == 0 )); then
+  PS1='\[\e[1;97;41m\]\u@\h \w\n\$\[\e[0m\] '
+else
+  PS1='\[\e[1;36m\]\u\[\e[0m\]@\[\e[1;34m\]\h\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\]\n\[\e[1;32m\]\$\[\e[0m\] '
+fi
 EOF
 
 COPY runcodex.sh $HOME/bin/

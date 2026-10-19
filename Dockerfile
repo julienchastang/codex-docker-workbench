@@ -25,6 +25,7 @@ RUN dnf -y update && \
       wget \
       git \
       less \
+      make \
       openssh-clients \
       procps-ng \
       which \
@@ -58,12 +59,12 @@ RUN dnf -y install \
       diffutils \
       zip \
       unzip \
+      texinfo \
       vim-common && \
     dnf -y clean all && rm -rf /var/cache/dnf
 
 RUN dnf -y install \
       gcc \
-      make \
       ncurses-devel \
       gnutls-devel \
       libxml2-devel \
@@ -77,7 +78,7 @@ RUN dnf -y install \
     make install && \
     cd .. && \
     rm -rf "emacs-${EMACS_VERSION}" "emacs-${EMACS_VERSION}.tar.xz" && \
-    dnf -y remove gcc make ncurses-devel gnutls-devel libxml2-devel jansson-devel xz && \
+    dnf -y remove gcc ncurses-devel gnutls-devel libxml2-devel jansson-devel xz && \
     dnf -y clean all && rm -rf /var/cache/dnf
 
 RUN curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \

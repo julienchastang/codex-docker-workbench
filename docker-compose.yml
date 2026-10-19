@@ -20,6 +20,7 @@ services:
 
     environment:
       - PAGER=less
+      - TERM=${TERM:-xterm-256color}
       - CODEX_USER_ID=${CODEX_USER_ID:-1000}
       - CODEX_GROUP_ID=${CODEX_GROUP_ID:-1000}
 

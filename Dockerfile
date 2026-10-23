@@ -5,6 +5,7 @@ WORKDIR /workspace
 ENV GOSU_VERSION=1.19
 ENV GOSU_URL=https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu
 ARG EMACS_VERSION=31.1
+ARG DIRENV_VERSION=2.37.1
 ENV HOME=/home/codex
 ENV PATH=$HOME/bin:$PATH
 
@@ -62,6 +63,19 @@ RUN dnf -y install \
       texinfo \
       vim-common && \
     dnf -y clean all && rm -rf /var/cache/dnf
+
+RUN set -eu; \
+    case "$(uname -m)" in \
+      x86_64) direnv_arch=amd64 ;; \
+      aarch64) direnv_arch=arm64 ;; \
+      armv[67]*) direnv_arch=arm ;; \
+      i[3456]86) direnv_arch=386 ;; \
+      *) direnv_arch="$(uname -m)" ;; \
+    esac; \
+    curl -fsSL -o /usr/local/bin/direnv \
+      "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-${direnv_arch}"; \
+    chmod +x /usr/local/bin/direnv; \
+    direnv version
 
 RUN dnf -y install \
       gcc \

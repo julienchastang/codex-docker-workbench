@@ -23,12 +23,14 @@ RUN dnf -y update && \
       grep \
       sed \
       gawk \
+      hunspell \
       wget \
       git \
       less \
       make \
       openssh-clients \
       procps-ng \
+      rsync \
       which \
       findutils \
       tar \

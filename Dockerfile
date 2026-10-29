@@ -2,7 +2,7 @@ FROM rockylinux:9
 
 WORKDIR /workspace
 
-ENV GOSU_VERSION=1.19
+ENV GOSU_VERSION=1.20
 ENV GOSU_URL=https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu
 ARG EMACS_VERSION=31.1
 ARG DIRENV_VERSION=2.37.1

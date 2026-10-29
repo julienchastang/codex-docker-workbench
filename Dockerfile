@@ -35,6 +35,8 @@ RUN dnf -y update && \
       findutils \
       tar \
       gzip \
+      gnupg2 \
+      pinentry \
       bubblewrap \
       python3 \
       python3-pip \
@@ -152,6 +154,10 @@ if (( EUID == 0 )); then
   PS1='\[\e[1;97;41m\]\u@\h \w\n\$\[\e[0m\] '
 else
   PS1='\[\e[1;36m\]\u\[\e[0m\]@\[\e[1;34m\]\h\[\e[0m\] \[\e[1;33m\]\w\[\e[0m\]\n\[\e[1;32m\]\$\[\e[0m\] '
+fi
+
+if [[ -t 0 ]]; then
+  export GPG_TTY="$(tty)"
 fi
 
 eval "$(direnv hook bash)"

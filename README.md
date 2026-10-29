@@ -1,85 +1,75 @@
-# Codex Docker Workbench
+# Codex workbench
 
-A Rocky Linux container for running Codex against a local repository. It includes Git, Node.js, Python, Ruby, common development tools, and network diagnostics.
+A Docker-based Linux development environment for running Codex against local repositories. It builds a Rocky Linux 9 image with common command-line tools and keeps Codex state isolated per repository while sharing authentication, Git, SSH, and Emacs configuration.
 
 ## Requirements
 
-- Docker with Compose
-- A local repository to mount into the container
+- Linux
+- Docker with the Compose plugin
+- Bash
 
 ## Setup
 
-Create a `.env` file:
-
-```sh
-CODEX_HOST_DIR=/path/to/codex
-REPO=example-repo
-```
-
-Place the target repository and shared Git/SSH configuration at:
+Choose a host directory and create the expected layout:
 
 ```text
-$CODEX_HOST_DIR/
-├── codex-repos/$REPO/
+<host-dir>/
+├── codex-repos/<repo>/
 └── codex-state/shared/
+    ├── emacs.d/
     ├── .gitconfig
     ├── .ssh/
-    ├── emacs.d/
     └── codex/
         ├── auth.json
         └── config.toml
 ```
 
-The launcher creates and mounts `$CODEX_HOST_DIR/codex-state/shared/emacs.d/`.
-Place an existing Emacs configuration there before launching the workbench. The
-directory must be writable by UID/GID 1000 (or the IDs set with
-`CODEX_USER_ID` and `CODEX_GROUP_ID`).
+Create `.env` beside `docker-compose.yml`:
 
-Then launch the workbench:
+```dotenv
+CODEX_HOST_DIR=/absolute/path/to/host-dir
+REPO=project-name
+CODEX_USER_ID=1000
+CODEX_GROUP_ID=1000
+CODEX_NETWORK_MODE=bridge
+```
 
-```sh
+`REPO` names a directory under `CODEX_HOST_DIR/codex-repos`. Set the user and group IDs to the account that owns the host files:
+
+```bash
+id -u
+id -g
+```
+
+The launcher also requires `AGENTS.md`, the shared `.gitconfig`, and the shared `.ssh` directory to exist. It creates the remaining state directories and empty Codex configuration files when needed. Put any custom Emacs configuration in `CODEX_HOST_DIR/codex-state/shared/emacs.d`; it is mounted as `/home/codex/.emacs.d`.
+
+## Run
+
+```bash
 ./codex-launcher.sh
 ```
 
-The repository is mounted at `/workspace`. Run `codex` from the container shell.
-The workbench's shared `AGENTS.md` is mounted read-only at
-`/workspace/AGENTS.md` for every repository selected with `REPO`; it is not part
-of the repository itself. The launcher exits with an error if the source file is
-missing.
+The first run builds the image. The selected repository is mounted at `/workspace`, and repository-specific Codex state is stored under:
 
-Emacs is available in the container without a graphical interface. From the
-container shell, open the mounted configuration interactively or test it in
-batch mode:
-
-```sh
-emacs -nw
-emacs --batch --load ~/.emacs.d/init.el \
-  --eval '(message "Emacs configuration loaded")'
+```text
+<host-dir>/codex-state/repos/<repo>/codex/
 ```
 
-The batch command verifies that the configuration loads in the container's
-Linux environment, but it does not fully reproduce an interactive session.
-Platform-specific configuration, such as macOS-only settings, may require
-guards to load successfully in the container.
+Useful options:
 
-Files created under `/home/codex/.emacs.d` persist in
-`$CODEX_HOST_DIR/codex-state/shared/emacs.d/` on the host. Emacs may also write
-cache and state files elsewhere under the writable `/home/codex` home directory;
-those files are container-local unless separately mounted.
-
-## Options
-
-```sh
-./codex-launcher.sh --fresh   # archive this repository's Codex state first
-./codex-launcher.sh --no-run  # prepare state without starting the container
+```bash
+./codex-launcher.sh --no-run  # prepare state without starting a container
+./codex-launcher.sh --fresh   # archive this repository's state, then start clean
 ```
 
-Authentication and configuration are shared across repositories in
-`$CODEX_HOST_DIR/codex-state/shared/codex/`. The directory is writable so Codex
-can replace either file atomically. SSH credentials and `.gitconfig` are mounted
-separately and read-only. Other Codex state is stored per repository under
-`$CODEX_HOST_DIR/codex-state/repos/$REPO/`.
+Existing state archived by `--fresh` is moved to `codex-state/repos-archives` with a timestamp.
 
-When upgrading an existing setup, move `auth.json` and `config.toml` from
-`codex-state/shared/` into `codex-state/shared/codex/` before launching the
-workbench.
+## Included tooling
+
+The image includes Codex, Node.js 22, Python 3 with common linting, typing, testing, and web packages, Ruby 3.3 with Bundler, Emacs 31.1, direnv, Git, OpenSSH, ripgrep, jq, and standard Linux networking and archive utilities.
+
+To rebuild after changing the image:
+
+```bash
+docker compose build
+```

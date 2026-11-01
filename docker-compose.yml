@@ -10,13 +10,15 @@ services:
     working_dir: /workspace
     network_mode: ${CODEX_NETWORK_MODE:-bridge}
 
-    # Codex uses Bubblewrap for its workspace sandbox. Docker's default seccomp
-    # profile blocks the unprivileged user/mount namespace operations Bubblewrap
-    # requires, causing sandboxed commands to fail and fall back to approval prompts.
-    # This disables Docker's syscall filtering but retains the other container
-    # isolation mechanisms while allowing Codex's own sandbox to function.
+    # Allow Codex's Bubblewrap sandbox to work without repeated approval fallbacks.
+    # The Rocky VM required seccomp=unconfined; Lubuntu required apparmor=unconfined
+    # (whether Lubuntu also needs seccomp=unconfined has not been tested).
+    # These disable Docker's seccomp and AppArmor protections for every process in
+    # this development container, weakening host isolation even outside Bubblewrap.
+    # Other container isolation mechanisms remain in place.
     security_opt:
       - seccomp=unconfined
+      - apparmor=unconfined
 
     environment:
       - PAGER=less

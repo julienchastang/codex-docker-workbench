@@ -6,6 +6,7 @@ ENV GOSU_VERSION=1.20
 ENV GOSU_URL=https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu
 ARG EMACS_VERSION=31.1
 ARG DIRENV_VERSION=2.37.1
+ARG GITLEAKS_VERSION=8.30.1
 ENV HOME=/home/codex
 ENV PATH=$HOME/bin:$PATH
 
@@ -80,6 +81,21 @@ RUN set -eu; \
       "https://github.com/direnv/direnv/releases/download/v${DIRENV_VERSION}/direnv.linux-${direnv_arch}"; \
     chmod +x /usr/local/bin/direnv; \
     direnv version
+
+RUN set -eu; \
+    case "$(uname -m)" in \
+      x86_64) gitleaks_arch=x64 ;; \
+      aarch64) gitleaks_arch=arm64 ;; \
+      *) echo >&2 "unsupported architecture: $(uname -m)"; exit 1 ;; \
+    esac; \
+    archive="gitleaks_${GITLEAKS_VERSION}_linux_${gitleaks_arch}.tar.gz"; \
+    release_url="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}"; \
+    curl -fsSLO "${release_url}/${archive}"; \
+    curl -fsSLO "${release_url}/gitleaks_${GITLEAKS_VERSION}_checksums.txt"; \
+    grep "  ${archive}$" "gitleaks_${GITLEAKS_VERSION}_checksums.txt" | sha256sum -c -; \
+    tar -xzf "${archive}" -C /usr/local/bin gitleaks; \
+    rm -f "${archive}" "gitleaks_${GITLEAKS_VERSION}_checksums.txt"; \
+    gitleaks version
 
 RUN dnf -y install \
       gcc \

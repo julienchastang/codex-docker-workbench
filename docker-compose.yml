@@ -51,3 +51,6 @@ services:
 
       # Writable Emacs configuration and state.
       - "${CODEX_HOST_DIR}/codex-state/shared/emacs.d:/home/codex/.emacs.d"
+
+      # Writable XDG application configuration shared by every repository.
+      - "${CODEX_HOST_DIR}/codex-state/shared/config:/home/codex/.config"

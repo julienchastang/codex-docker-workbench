@@ -16,6 +16,7 @@ Choose a host directory and create the expected layout:
 <host-dir>/
 ├── codex-repos/<repo>/
 └── codex-state/shared/
+    ├── config/
     ├── emacs.d/
     ├── .gitconfig
     ├── .ssh/
@@ -41,7 +42,7 @@ id -u
 id -g
 ```
 
-The launcher also requires `AGENTS.md`, the shared `.gitconfig`, and the shared `.ssh` directory to exist. It creates the remaining state directories and empty Codex configuration files when needed. Put any custom Emacs configuration in `CODEX_HOST_DIR/codex-state/shared/emacs.d`; it is mounted as `/home/codex/.emacs.d`.
+The launcher also requires `AGENTS.md`, the shared `.gitconfig`, and the shared `.ssh` directory to exist. It creates the remaining state directories and empty Codex configuration files when needed. Put any custom Emacs configuration in `CODEX_HOST_DIR/codex-state/shared/emacs.d`; it is mounted as `/home/codex/.emacs.d`. General application configuration can go in `CODEX_HOST_DIR/codex-state/shared/config`, which is mounted as `/home/codex/.config`.
 
 ## Run
 
